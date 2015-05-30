@@ -10,6 +10,14 @@
  *
  * Revision:
  *
+ * 20150323 1.0.2 setCookie() only creates session cookies
+ *                Even when docs like http://www.w3schools.com/js/js_cookies.asp show
+ *                that it is valid to create a expiration date with toGMTString() (no dashes)
+ *                between the date values, certain browser do not accept this as a valid
+ *                expiration date and create the cookie as a session cookie.
+ *                To create a valid expiration date the date parts must be seperated by a dash
+ *                so we need to create a helper doing this for us.
+ *
  * 20141230 1.0.1 Initial release
  *
  * Copyright 2014 (C) Andreas Schaefer <andreas.schaefer@schaefer-it.net>
@@ -54,7 +62,7 @@
     init: function(selector){
 
     // Add library version and init length
-    this.__version__ = '1.0.1';
+    this.__version__ = '1.0.2';
     this.__author__ = 'Andreas Schaefer <andreas.schaefer@schaefer-it.net>';
     this.length  = 0;
 
@@ -117,11 +125,20 @@
      * @return
      */
     setCookie: function( name, value, days ) {
+
+
       var expires = '';
       if (days) {
   	     var expiresAt = new Date();
 	       expiresAt.setTime( expiresAt.getTime() + (days * 60 * 60 * 24 * 1000) );
-        expires = expiresAt.toGMTString();
+        expires = ''
+                + ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][expiresAt.getUTCDay()] + ', '
+                + ( expiresAt.getUTCDate() < 10 ? '0' : '' ) + expiresAt.getUTCDate() + '-'
+                + ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][expiresAt.getUTCMonth()] + '-'
+                + expiresAt.getUTCFullYear() + ' '
+                + (expiresAt.getUTCHours() < 10 ? '0' : '') + expiresAt.getUTCHours() + ':'
+                + (expiresAt.getUTCMinutes() < 10 ? '0' : '' ) + expiresAt.getUTCMinutes() + ':'
+                + (expiresAt.getUTCSeconds() < 10 ? '0' : '' ) + expiresAt.getUTCSeconds() + ' GMT';
       }
       document.cookie = name + "=" + escape(value) + "; path=/; expires=" + expires;
     },

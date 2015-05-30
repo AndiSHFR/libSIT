@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <script type="text/javascript" src="../js/libsit.js"></script>
+  </head>
+
+  <body>
+    <script>
+
+      function DoCookieTest() {
+        var o1 = document.getElementById('cn');
+        var o2 = document.getElementById('cv');
+        alert(o1.value);
+
+        SIT.fn.setCookie(o1.value, o2.value);
+        SIT.fn.setCookie(o1.value + '_PERSISTENT', o2.value, 365);
+
+        console.log(SIT.fn.getCookie(o1.value));
+      }
+
+
+    </script>
+
+    <input type="button" value="Write cookie" onClick="DoCookieTest();">
+    Cookie Name: <input type="input" id="cn" value="TestCookie"><br>
+    Cookie Value: <input type="input" id="cv" value="JustABunchOfDataâ"><br>
+    <input type="checkbox" id="soc" value="false">Session Only Coookie
+
+    <div id="cr">
+      -
+    </div>
+
+  </body>
+</html>
